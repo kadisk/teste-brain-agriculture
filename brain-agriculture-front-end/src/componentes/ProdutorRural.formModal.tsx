@@ -38,24 +38,30 @@ async function getData(id:number) {
 }
 
 interface Props {
-    id:number
+    id?:number
     onClose: any
-    onUpdate: any
+    onUpdate?: any
+    onRegister?: any
+    
 }
 
-function ProdutorRuralFormModal({id, onClose, onUpdate}:Props) {
+function ProdutorRuralFormModal({id, onClose, onUpdate, onRegister}:Props) {
 
     const [ produtorRural, setProdutorRural ] = useState<ProdutorRuralType>()
     const [ valueForUpdate, setValueForUpdate ] = useState<ProdutorRuralType>()
-    const [isInEditConfirmationMode, setIsInEditConfirmationMode] = useState(false)
+    const [isConfirmationMode, setIsConfirmationMode] = useState(false)
 
     useEffect(() => {
-        const fetchData = async () => {
+        
+        fetchData()
+    }, [])
+
+    const fetchData = async () => {
+        if (id){
             const data = await getData(id)
             setProdutorRural(data)
         }
-        fetchData()
-    }, [])
+    }
 
     const handleChangeValue = (valueForUpdate:any) => {
         setValueForUpdate(valueForUpdate)
@@ -66,11 +72,11 @@ function ProdutorRuralFormModal({id, onClose, onUpdate}:Props) {
     }
 
     const handleUpdateProcess = () => {
-        setIsInEditConfirmationMode(true)
+        setIsConfirmationMode(true)
     }
 
     const handleCancelConfirmation = () => {
-        setIsInEditConfirmationMode(false)
+        setIsConfirmationMode(false)
     }
 
     const handleResetUpdateProcess = () => {
@@ -97,20 +103,60 @@ function ProdutorRuralFormModal({id, onClose, onUpdate}:Props) {
         }
     }
 
+    const saveValue = async () => {
+        try {
+            if(valueForUpdate){
+                const response = await fetch(`http://localhost:3333/produtor-rural/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(valueForUpdate)
+                })
+        
+                if (!response.ok) {
+                    throw new Error(`Erro no cadastro: ${response.status}`)
+                }
+                onRegister()
+            }
+        } catch (error) {
+        }
+    }
+
     const handleUpdate = () => {
         updateValue()
     }
 
+    const handleRegister = () => {
+        saveValue()
+    }
+
+    const getFormModalTitle = () => id 
+        ? "Alteração de Cadastro"
+        : "Cadastro de Produtor Rural"
+
+    const getConfirmationModalTitle = () => id 
+        ? "Tem certeza que deseja alterar esse cadastro?"
+        : "Revisão do Cadastro"
+
+    const getConfirmationModalSubtitle = () => id 
+        ? "Detalhes da Alteração:"
+        : "Detalhes do Novo Cadastro:"
+
+    const handleRegisterProcess = () => {
+        setIsConfirmationMode(true)
+    }
+
     return (<>
         {
-            isInEditConfirmationMode 
+            isConfirmationMode 
             && <Modal show size='xl'>
                 <ModalHeader>
-                    <ModalTitle>Tem certeza que deseja alterar esse cadastro?</ModalTitle>
+                    <ModalTitle>{getConfirmationModalTitle()}</ModalTitle>
                 </ModalHeader>
                 <ModalBody>
                     <div className="p-3 mb-2 bg-light text-dark">
-                        <h5>Detalhes da Alteração:</h5>
+                        <h5>{getConfirmationModalSubtitle()}</h5>
                         {
                             valueForUpdate 
                             && Object
@@ -122,16 +168,16 @@ function ProdutorRuralFormModal({id, onClose, onUpdate}:Props) {
                 </ModalBody>
                 <ModalFooter>
                     <Button onClick={()=> handleCancelConfirmation()}>Não</Button>
-                    <Button variant="danger" onClick={handleUpdate} >Sim</Button>
+                    <Button variant="danger" onClick={id ? handleUpdate : handleRegister} >Sim</Button>
                 </ModalFooter>
             </Modal>
         }
         {
-            !isInEditConfirmationMode 
+            !isConfirmationMode 
             && 
                 <Modal show size='xl'>
                     <ModalHeader>
-                    <ModalTitle>Alteração de cadastro</ModalTitle>
+                    <ModalTitle>{getFormModalTitle()}</ModalTitle>
                     </ModalHeader>
                     <ModalBody>
                         <ProdutorRuralForm 
@@ -146,11 +192,16 @@ function ProdutorRuralFormModal({id, onClose, onUpdate}:Props) {
                             disabled={!valueForUpdate}
                             onClick={handleResetUpdateProcess}
                             >Reset</Button>
-                        <Button 
-                            variant="warning" 
-                            disabled={!valueForUpdate}
-                            onClick={handleUpdateProcess}
-                            >Salvar alteração</Button>
+                        {
+                            id 
+                            ? <Button 
+                                variant="warning" 
+                                disabled={!valueForUpdate}
+                                onClick={handleUpdateProcess}>Salvar alteração</Button>
+                            : <Button 
+                                variant="success"
+                                onClick={handleRegisterProcess}>Salvar</Button>
+                        }
                     </ModalFooter>
                 </Modal>
         }
