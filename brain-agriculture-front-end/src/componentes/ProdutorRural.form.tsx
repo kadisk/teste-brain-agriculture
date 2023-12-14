@@ -27,7 +27,7 @@ function ProdutorRuralForm({
 
     const [ isOriginalValueChanged, setIsOriginalValueChanged ] = useState(false)
 
-    const { register, getValues, setValue } = useForm({
+    const { register, getValues, setValue, reset } = useForm({
         defaultValues: data || {}
     })
 
@@ -51,12 +51,16 @@ function ProdutorRuralForm({
     const refreshForm = () => {
         if (data) {
             fillForm(valueForUpdate || data)
+        } else if(!data && valueForUpdate) {
+            fillForm(valueForUpdate)
+        } else {
+            reset()
         }
     }
 
-    const fillForm = (values:ProdutorRuralType) => {
+    const fillForm = (values:ProdutorRuralType|{}|any) => {
         if (values) {
-            Object.keys(values).forEach(key => {
+            Object.keys(values).forEach((key:any) => {
                 setValue(key, values[key])
             })
         }

@@ -47,7 +47,7 @@ interface Props {
 
 function ProdutorRuralFormModal({id, onClose, onUpdate, onRegister}:Props) {
 
-    const [ produtorRural, setProdutorRural ] = useState<ProdutorRuralType>()
+    const [ valueLoader, setValueLoader ] = useState<ProdutorRuralType>()
     const [ valueForUpdate, setValueForUpdate ] = useState<ProdutorRuralType>()
     const [isConfirmationMode, setIsConfirmationMode] = useState(false)
 
@@ -59,7 +59,7 @@ function ProdutorRuralFormModal({id, onClose, onUpdate, onRegister}:Props) {
     const fetchData = async () => {
         if (id){
             const data = await getData(id)
-            setProdutorRural(data)
+            setValueLoader(data)
         }
     }
 
@@ -147,6 +147,13 @@ function ProdutorRuralFormModal({id, onClose, onUpdate, onRegister}:Props) {
         setIsConfirmationMode(true)
     }
 
+    console.log("/////////////////////////////////")
+    console.log("valueLoader")
+    console.log(valueLoader)
+    console.log("valueForUpdate")
+    console.log(valueForUpdate)
+    console.log("/////////////////////////////////")
+
     return (<>
         {
             isConfirmationMode 
@@ -182,7 +189,7 @@ function ProdutorRuralFormModal({id, onClose, onUpdate, onRegister}:Props) {
                     <ModalBody>
                         <ProdutorRuralForm 
                             valueForUpdate={valueForUpdate}
-                            data={produtorRural} 
+                            data={valueLoader} 
                             onChangeValue={(valueForUpdate:any)=> handleChangeValue(valueForUpdate)}
                             onResetValue={handleResetValue}/>
                     </ModalBody>
