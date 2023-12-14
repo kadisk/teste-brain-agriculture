@@ -174,8 +174,8 @@ function ProdutorRuralFormModal({id, onClose, onUpdate, onRegister}:Props) {
                     </div>
                 </ModalBody>
                 <ModalFooter>
-                    <Button onClick={()=> handleCancelConfirmation()}>Não</Button>
-                    <Button variant="danger" onClick={id ? handleUpdate : handleRegister} >Sim</Button>
+                    <Button variant="secondary" onClick={()=> handleCancelConfirmation()}>Voltar</Button>
+                    <Button variant="danger" onClick={id ? handleUpdate : handleRegister} >Confirmar</Button>
                 </ModalFooter>
             </Modal>
         }
@@ -194,7 +194,7 @@ function ProdutorRuralFormModal({id, onClose, onUpdate, onRegister}:Props) {
                             onResetValue={handleResetValue}/>
                     </ModalBody>
                     <ModalFooter>
-                        <Button onClick={()=> onClose()}>Cancelar</Button>
+                        <Button variant="secondary" onClick={()=> onClose()}>Cancelar</Button>
                         <Button 
                             disabled={!valueForUpdate}
                             onClick={handleResetUpdateProcess}

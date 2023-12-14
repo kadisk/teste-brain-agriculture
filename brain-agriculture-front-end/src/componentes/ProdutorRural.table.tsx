@@ -82,8 +82,8 @@ function ProdutorRuralTable() {
                             <td>{produtor.estado}</td>
                             <td>
                             <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <Button variant="outline-warning" onClick={() => handleEdit(produtor.id)}>Editar</Button>
-                                <Button variant="outline-danger">Remover</Button>
+                                <Button variant="info" onClick={() => handleEdit(produtor.id)}>Editar</Button>
+                                <Button variant="secondary">Remover</Button>
                                 </div>
                             </td>
                         </tr>
