@@ -1,4 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
+import '../styles/global.css'
+
+import HeaderMain from "../componentes/HeaderMain"
 
 export const metadata = {
   title: 'Brain Agriculture - Produtor Rural',
@@ -12,7 +15,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body>{children}</body>
+      <body>
+        <HeaderMain/>
+        {children}
+      </body>
     </html>
   )
 }
