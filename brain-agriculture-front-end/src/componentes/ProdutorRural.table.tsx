@@ -13,7 +13,7 @@ async function getData() {
     }
 }
 
-async function ProdutorRuralTable(props:any) {
+async function ProdutorRuralTable() {
 
     const produtores = await getData()
 
