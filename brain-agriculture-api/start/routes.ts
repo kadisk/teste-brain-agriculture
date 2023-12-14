@@ -27,4 +27,5 @@ Route.get('/', async () => {
 Route.group(() => {
   Route.get('/list', 'ProdutorRuralController.list')
   Route.post('/register', 'ProdutorRuralController.register')
+  Route.get('/:id', 'ProdutorRuralController.show')
 }).prefix('/produtor-rural')

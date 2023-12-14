@@ -1,21 +1,50 @@
-function ProdutorRuralForm() {
+import React, {useEffect} from 'react'
+import { useForm } from 'react-hook-form'
+interface ProdutorRuralType {
+    id: number;
+    cpf: string;
+    cnpj: string;
+    nome_produtor: string;
+    nome_fazenda: string;
+    cidade: string;
+    estado: string;
+    created_at: string;
+    updated_at: string;
+}
+interface Props{
+    data:ProdutorRuralType|undefined
+}
+
+function ProdutorRuralForm({data}:Props) {
+
+    const { register, handleSubmit, setValue } = useForm({
+        defaultValues: data || {}
+    });
+
+    useEffect(() => {
+        if (data) {
+            Object.keys(data).forEach(key => {
+                setValue(key, data[key])
+            })
+        }
+    }, [data, setValue])
 
     return (<form className="row g-3">
                 <div className="col-md-12">
                     <label className="form-label">Nome do produtor</label>
-                    <input type="text" className="form-control"/>
+                    <input type="text" className="form-control" {...register("nome_produtor")}/>
                 </div>
                 <div className="col-md-12">
                     <label className="form-label">Nome da Fazenda</label>
-                    <input type="password" className="form-control" id="inputPassword4"/>
+                    <input type="text" className="form-control" {...register("nome_fazenda")}/>
                 </div>
                 <div className="col-10">
                     <label className="form-label">Cidade</label>
-                    <input type="text" className="form-control"/>
+                    <input type="text" className="form-control" {...register("cidade")}/>
                 </div>
                 <div className="col-2">
                     <label className="form-label">Estado</label>
-                    <select id="inputState" className="form-select">
+                    <select id="inputState" className="form-select" {...register("estado")}>
                         <option selected>Escolha...</option>
                         <option value="AC">Acre</option>
                         <option value="AL">Alagoas</option>

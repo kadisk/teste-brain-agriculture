@@ -34,9 +34,13 @@ function ProdutorRuralTable() {
         setIdProdutorForEdit(idProdutor)
     }
 
+    const handleCancelEdit = () => {
+        setIdProdutorForEdit(undefined)
+    }
+
     return (
         <div className="table-responsive small">
-            { idProdutorForEdit && <ProdutorRuralFormModal/>}
+            { idProdutorForEdit && <ProdutorRuralFormModal id={idProdutorForEdit} onClose={() => handleCancelEdit()}/>}
             <table className="table table-striped table-sm">
                 <thead>
                     <tr>

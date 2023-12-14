@@ -14,4 +14,13 @@ export default class ProdutorRuralController {
         const produtor = await ProdutorRural.create(dados)
         return response.status(201).json(produtor)
     }
+
+    public async show({ params, response }: HttpContextContract) {
+        try {
+            const produtor = await ProdutorRural.findOrFail(params.id)
+            return response.json(produtor)
+        } catch (error) {
+            return response.status(404).json({ message: 'Produtor Rural não encontrado' })
+        }
+    }
 }
