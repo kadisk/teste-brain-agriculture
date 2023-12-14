@@ -3,6 +3,10 @@ import React, { useEffect, useState } from 'react'
 
 import ProdutorRuralFormModal from "./ProdutorRural.formModal"
 
+import {
+    Button
+} from 'react-bootstrap'
+
 async function getData() {
     try {
         const res = await fetch('http://localhost:3333/produtor-rural/list')
@@ -44,7 +48,7 @@ function ProdutorRuralTable() {
             <table className="table table-striped table-sm">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>ID</th>
                         <th>CPF</th>
                         <th>CNPJ</th>
                         <th>Nome do Produtor</th>
@@ -66,8 +70,8 @@ function ProdutorRuralTable() {
                             <td>{produtor.estado}</td>
                             <td>
                             <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <button type="button" className="btn btn-outline-warning" onClick={() => handleEdit(produtor.id)}>Editar</button>
-                                <button type="button" className="btn btn-outline-danger">Remover</button>
+                                <Button variant="outline-warning" onClick={() => handleEdit(produtor.id)}>Editar</Button>
+                                <Button variant="outline-danger">Remover</Button>
                                 </div>
                             </td>
                         </tr>

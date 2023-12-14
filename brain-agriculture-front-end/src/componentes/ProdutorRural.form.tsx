@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import { useForm } from 'react-hook-form'
 interface ProdutorRuralType {
     id: number;
@@ -13,23 +13,65 @@ interface ProdutorRuralType {
 }
 interface Props{
     data:ProdutorRuralType|undefined
+    valueForUpdate:ProdutorRuralType|undefined
+    onChangeValue:any
+    onResetValue: any
 }
 
-function ProdutorRuralForm({data}:Props) {
+function ProdutorRuralForm({
+    data,
+    valueForUpdate,
+    onChangeValue,
+    onResetValue
+}:Props) {
 
-    const { register, handleSubmit, setValue } = useForm({
+    const [ isOriginalValueChanged, setIsOriginalValueChanged ] = useState(false)
+
+    const { register, getValues, setValue } = useForm({
         defaultValues: data || {}
-    });
+    })
 
     useEffect(() => {
-        if (data) {
-            Object.keys(data).forEach(key => {
-                setValue(key, data[key])
-            })
-        }
+        refreshForm()
     }, [data, setValue])
 
-    return (<form className="row g-3">
+
+    useEffect(() => {
+        if(isOriginalValueChanged && !valueForUpdate){
+            setIsOriginalValueChanged(false)
+            refreshForm()
+        }
+
+        if(!isOriginalValueChanged && valueForUpdate){
+            setIsOriginalValueChanged(true)
+        }
+    }, [valueForUpdate])
+
+
+    const refreshForm = () => {
+        if (data) {
+            fillForm(valueForUpdate || data)
+        }
+    }
+
+    const fillForm = (values:ProdutorRuralType) => {
+        if (values) {
+            Object.keys(values).forEach(key => {
+                setValue(key, values[key])
+            })
+        }
+    }
+
+    const handleChangeForm = () => {
+        const currentValues = {...data, ...getValues()}
+        if (JSON.stringify(currentValues) !== JSON.stringify(data)) {
+            onChangeValue(currentValues)
+        } else {
+            onResetValue()
+        }
+    }
+
+    return (<form className="row g-3" onChange={() => handleChangeForm()}>
                 <div className="col-md-12">
                     <label className="form-label">Nome do produtor</label>
                     <input type="text" className="form-control" {...register("nome_produtor")}/>
@@ -38,11 +80,11 @@ function ProdutorRuralForm({data}:Props) {
                     <label className="form-label">Nome da Fazenda</label>
                     <input type="text" className="form-control" {...register("nome_fazenda")}/>
                 </div>
-                <div className="col-10">
+                <div className="col-8">
                     <label className="form-label">Cidade</label>
                     <input type="text" className="form-control" {...register("cidade")}/>
                 </div>
-                <div className="col-2">
+                <div className="col-4">
                     <label className="form-label">Estado</label>
                     <select id="inputState" className="form-select" {...register("estado")}>
                         <option selected>Escolha...</option>
