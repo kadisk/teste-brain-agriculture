@@ -23,4 +23,17 @@ export default class ProdutorRuralController {
             return response.status(404).json({ message: 'Produtor Rural não encontrado' })
         }
     }
+
+    public async update({ params, request, response }: HttpContextContract) {
+        try {
+            const produtor = await ProdutorRural.findOrFail(params.id)
+            const dados = request.only(['cpf', 'cnpj', 'nomeProdutor', 'nomeFazenda', 'cidade', 'estado'])
+            produtor.merge(dados)
+            await produtor.save()
+
+            return response.json(produtor)
+        } catch (error) {
+            return response.status(404).json({ message: 'Produtor Rural não encontrado' })
+        }
+    }
 }
