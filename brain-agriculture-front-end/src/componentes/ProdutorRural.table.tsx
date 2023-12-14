@@ -1,3 +1,7 @@
+"use client"
+import React, { useEffect, useState } from 'react'
+
+import ProdutorRuralFormModal from "./ProdutorRural.formModal"
 
 async function getData() {
     try {
@@ -13,22 +17,37 @@ async function getData() {
     }
 }
 
-async function ProdutorRuralTable() {
+function ProdutorRuralTable() {
 
-    const produtores = await getData()
+    const [produtores, setProdutores] = useState([])
+    const [ idProdutorForEdit, setIdProdutorForEdit ] = useState()
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await getData()
+            setProdutores(data)
+        }
+        fetchData()
+    }, [])
+
+    const handleEdit = (idProdutor:any) => {
+        setIdProdutorForEdit(idProdutor)
+    }
 
     return (
         <div className="table-responsive small">
+            { idProdutorForEdit && <ProdutorRuralFormModal/>}
             <table className="table table-striped table-sm">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">CPF</th>
-                        <th scope="col">CNPJ</th>
-                        <th scope="col">Nome do Produtor</th>
-                        <th scope="col">Nome da Fazenda</th>
-                        <th scope="col">Cidade</th>
-                        <th scope="col">Estado</th>
+                        <th>#</th>
+                        <th>CPF</th>
+                        <th>CNPJ</th>
+                        <th>Nome do Produtor</th>
+                        <th>Nome da Fazenda</th>
+                        <th>Cidade</th>
+                        <th>Estado</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,6 +60,12 @@ async function ProdutorRuralTable() {
                             <td>{produtor.nome_fazenda}</td>
                             <td>{produtor.cidade}</td>
                             <td>{produtor.estado}</td>
+                            <td>
+                            <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button type="button" className="btn btn-outline-warning" onClick={() => handleEdit(produtor.id)}>Editar</button>
+                                <button type="button" className="btn btn-outline-danger">Remover</button>
+                                </div>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
