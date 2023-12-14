@@ -12,15 +12,15 @@ import {
 import ProdutorRuralForm from "./ProdutorRural.form"
 
 interface ProdutorRuralType {
-    id: number;
-    cpf: string;
-    cnpj: string;
-    nome_produtor: string;
-    nome_fazenda: string;
-    cidade: string;
-    estado: string;
-    created_at: string;
-    updated_at: string;
+    id: number
+    cpf: string
+    cnpj: string
+    nome_produtor: string
+    nome_fazenda: string
+    cidade: string
+    estado: string
+    created_at: string
+    updated_at: string
 }
 
 async function getData(id:number) {
@@ -40,12 +40,13 @@ async function getData(id:number) {
 interface Props {
     id:number
     onClose: any
+    onUpdate: any
 }
 
-function ProdutorRuralFormModal({id, onClose}:Props) {
+function ProdutorRuralFormModal({id, onClose, onUpdate}:Props) {
 
     const [ produtorRural, setProdutorRural ] = useState<ProdutorRuralType>()
-    const [ valueForUpdate, setValueForUpdate ] = useState()
+    const [ valueForUpdate, setValueForUpdate ] = useState<ProdutorRuralType>()
     const [isInEditConfirmationMode, setIsInEditConfirmationMode] = useState(false)
 
     useEffect(() => {
@@ -76,6 +77,30 @@ function ProdutorRuralFormModal({id, onClose}:Props) {
         setValueForUpdate(undefined)
     }
 
+    const updateValue = async () => {
+        try {
+            if(valueForUpdate){
+                const response = await fetch(`http://localhost:3333/produtor-rural/${valueForUpdate.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(valueForUpdate)
+                })
+        
+                if (!response.ok) {
+                    throw new Error(`Erro na atualização: ${response.status}`)
+                }
+                onUpdate()
+            }
+        } catch (error) {
+        }
+    }
+
+    const handleUpdate = () => {
+        updateValue()
+    }
+
     return (<>
         {
             isInEditConfirmationMode 
@@ -97,7 +122,7 @@ function ProdutorRuralFormModal({id, onClose}:Props) {
                 </ModalBody>
                 <ModalFooter>
                     <Button onClick={()=> handleCancelConfirmation()}>Não</Button>
-                    <Button variant="danger" >Sim</Button>
+                    <Button variant="danger" onClick={handleUpdate} >Sim</Button>
                 </ModalFooter>
             </Modal>
         }

@@ -27,12 +27,13 @@ function ProdutorRuralTable() {
     const [ idProdutorForEdit, setIdProdutorForEdit ] = useState()
 
     useEffect(() => {
-        const fetchData = async () => {
-            const data = await getData()
-            setProdutores(data)
-        }
-        fetchData()
+        refreshTable()
     }, [])
+
+    const refreshTable = async () => {
+        const data = await getData()
+        setProdutores(data)
+    }
 
     const handleEdit = (idProdutor:any) => {
         setIdProdutorForEdit(idProdutor)
@@ -42,9 +43,20 @@ function ProdutorRuralTable() {
         setIdProdutorForEdit(undefined)
     }
 
+    const handleUpdate = () => {
+        setIdProdutorForEdit(undefined)
+        refreshTable()
+    }
+
     return (
         <div className="table-responsive small">
-            { idProdutorForEdit && <ProdutorRuralFormModal id={idProdutorForEdit} onClose={() => handleCancelEdit()}/>}
+            { 
+                idProdutorForEdit 
+                && <ProdutorRuralFormModal 
+                        id={idProdutorForEdit}
+                        onUpdate={() => handleUpdate()}
+                        onClose={() => handleCancelEdit()}/>
+                }
             <table className="table table-striped table-sm">
                 <thead>
                     <tr>

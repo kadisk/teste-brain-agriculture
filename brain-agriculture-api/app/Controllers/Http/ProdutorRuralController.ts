@@ -10,8 +10,8 @@ export default class ProdutorRuralController {
     }
 
     public async register({ request, response }: HttpContextContract) {
-        const dados = request.only(['cpf', 'cnpj', 'nomeProdutor', 'nomeFazenda', 'cidade', 'estado'])
-        const produtor = await ProdutorRural.create(dados)
+        const data = request.only(['cpf', 'cnpj', 'nome_produtor', 'nome_fazenda', 'cidade', 'estado'])
+        const produtor = await ProdutorRural.create(data)
         return response.status(201).json(produtor)
     }
 
@@ -27,8 +27,9 @@ export default class ProdutorRuralController {
     public async update({ params, request, response }: HttpContextContract) {
         try {
             const produtor = await ProdutorRural.findOrFail(params.id)
-            const dados = request.only(['cpf', 'cnpj', 'nomeProdutor', 'nomeFazenda', 'cidade', 'estado'])
-            produtor.merge(dados)
+            const data = request.only(['cpf', 'cnpj', 'nome_produtor', 'nome_fazenda', 'cidade', 'estado'])
+            
+            produtor.merge(data)
             await produtor.save()
 
             return response.json(produtor)
