@@ -33,7 +33,10 @@ export default class ProdutorRuralController {
 
     public async show({ params, response }: HttpContextContract) {
         try {
-            const produtor = await ProdutorRural.findOrFail(params.id)
+            const produtor = await ProdutorRural.query()
+                .where('id', params.id)
+                .preload('culturas')
+                .firstOrFail()
             return response.json(produtor)
         } catch (error) {
             return response.status(404).json({ message: NOT_FOUND_MESSAGE })

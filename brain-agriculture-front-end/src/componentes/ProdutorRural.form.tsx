@@ -1,6 +1,18 @@
 import React, {useEffect, useState} from 'react'
 import { useForm } from 'react-hook-form'
 
+
+const RemoveProperty = (ob:any, property:any) => Object.keys(ob).reduce((acc:any, _property:any) => {
+    if(_property !== property){
+        return {
+            ...acc,
+            [_property]: ob[_property]
+        }
+    }
+    return acc
+
+}, {})
+
 const CPFMask = (cpf:any) => cpf
     .replace(/\D/g, '')
     .replace(/(\d{3})(\d)/, '$1.$2')
@@ -82,9 +94,17 @@ function ProdutorRuralForm({
 
     const fillForm = (values:ProdutorRuralType|{}|any) => {
         if (values) {
-            Object.keys(values).forEach((key:any) => {
-                setValue(key, values[key])
+
+            const updatedValues = {
+                ...values,
+                culturaIds: {}
+            }
+
+            culturas.forEach(cultura => {
+                updatedValues.culturaIds[cultura.id] = values.culturas.some(c => c.id === cultura.id)
             })
+            reset(updatedValues)
+
         }
     }
 
@@ -102,7 +122,9 @@ function ProdutorRuralForm({
                     ? RemoveMask(currentValues.numero_documento) 
                     : undefined
             }
-            onChangeValue(newCurrentValues)
+            const nnewCurrentValues = RemoveProperty(newCurrentValues, "culturas")
+            console.log(nnewCurrentValues)
+            onChangeValue(nnewCurrentValues)
         } else {
             onResetValue()
         }
