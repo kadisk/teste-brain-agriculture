@@ -34,3 +34,12 @@ Route.group(() => {
 Route.group(() => {
   Route.get('/list', 'CulturaController.list')
 }).prefix('/culturas')
+
+
+Route.group(() => {
+  Route.get('/total-fazendas', 'DashboardController.totalFazendas')
+  Route.get('/total-hectares', 'DashboardController.totalHectares')
+}).prefix('/dashboard')
+
+
+

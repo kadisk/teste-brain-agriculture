@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import ProdutorRuralFormModal from "./ProdutorRural.formModal"
 
@@ -12,7 +12,6 @@ import ProdutorRuralTable from "../componentes/ProdutorRural.table"
 export default function CadastroProdutorRural() {
 
     const [isRegisterMode, setIsRegisterMode] = useState(false)
-
 
     const handleCancelRegister = () => {
         setIsRegisterMode(false)

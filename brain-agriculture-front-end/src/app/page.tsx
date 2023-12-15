@@ -4,6 +4,7 @@ import {
 } from 'react-bootstrap'
 
 import CadastroProdutorRural from "../componentes/CadastroProdutorRural"
+import Dashboard from "../componentes/Dashboard"
 
 export default function Home() {
 	return (
@@ -24,6 +25,7 @@ export default function Home() {
 					</ul>
 
 				</div>
+				<Dashboard />
 				<CadastroProdutorRural/>
 			</Row>
 		</Container>
