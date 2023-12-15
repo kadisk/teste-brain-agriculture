@@ -26,6 +26,15 @@ export default class ProdutorRural extends BaseModel {
   @column()
   public estado: string
 
+  @column()
+  public areaTotalHectares: number
+
+  @column()
+  public areaAgricultavelHectares: number
+
+  @column()
+  public areaVegetacaoHectares: number
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 

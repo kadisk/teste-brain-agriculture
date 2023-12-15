@@ -2,6 +2,20 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 import ProdutorRural from 'App/Models/ProdutorRural'
 
+const PRODUTOR_RURAL_COLUMNS = [
+    'cpf', 
+    'cnpj', 
+    'nome_produtor', 
+    'nome_fazenda', 
+    'cidade', 
+    'estado',
+    'area_total_hectares',
+    'area_agricultavel_hectares',
+    'area_vegetacao_hectares'
+]
+
+const NOT_FOUND_MESSAGE = "Produtor Rural não encontrado"
+
 export default class ProdutorRuralController {
 
     public async list({ response }: HttpContextContract) {
@@ -10,7 +24,7 @@ export default class ProdutorRuralController {
     }
 
     public async register({ request, response }: HttpContextContract) {
-        const data = request.only(['cpf', 'cnpj', 'nome_produtor', 'nome_fazenda', 'cidade', 'estado'])
+        const data = request.only(PRODUTOR_RURAL_COLUMNS)
         const produtor = await ProdutorRural.create(data)
         return response.status(201).json(produtor)
     }
@@ -20,21 +34,21 @@ export default class ProdutorRuralController {
             const produtor = await ProdutorRural.findOrFail(params.id)
             return response.json(produtor)
         } catch (error) {
-            return response.status(404).json({ message: 'Produtor Rural não encontrado' })
+            return response.status(404).json({ message: NOT_FOUND_MESSAGE })
         }
     }
 
     public async update({ params, request, response }: HttpContextContract) {
         try {
             const produtor = await ProdutorRural.findOrFail(params.id)
-            const data = request.only(['cpf', 'cnpj', 'nome_produtor', 'nome_fazenda', 'cidade', 'estado'])
+            const data = request.only(PRODUTOR_RURAL_COLUMNS)
             
             produtor.merge(data)
             await produtor.save()
 
             return response.json(produtor)
         } catch (error) {
-            return response.status(404).json({ message: 'Produtor Rural não encontrado' })
+            return response.status(404).json({ message: NOT_FOUND_MESSAGE })
         }
     }
 }
