@@ -51,6 +51,9 @@ export default class ProdutorRuralController {
             produtor.merge(data)
             await produtor.save()
 
+            const culturaIds = request.input('culturaIds', [])
+            await produtor.related('culturas').sync(culturaIds)
+
             return response.json(produtor)
         } catch (error) {
             return response.status(404).json({ message: NOT_FOUND_MESSAGE })
