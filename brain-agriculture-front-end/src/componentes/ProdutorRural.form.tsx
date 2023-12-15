@@ -1,5 +1,22 @@
 import React, {useEffect, useState} from 'react'
 import { useForm } from 'react-hook-form'
+
+const CPFMask = (cpf:any) => cpf
+    .replace(/\D/g, '')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+    .replace(/(-\d{2})\d+?$/, '$1')
+
+const CNPJMask = (cnpj:any) => cnpj
+    .replace(/\D/g, '')
+    .replace(/(\d{2})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1/$2')
+    .replace(/(\d{4})(\d)/, '$1-$2')
+    .replace(/(-\d{2})\d+?$/, '$1')
+
+const RemoveMask = (valor:string) => valor.replace(/\D/g, '')
 interface ProdutorRuralType {
     id: number;
     cpf: string;
@@ -26,6 +43,7 @@ function ProdutorRuralForm({
 }:Props) {
 
     const [ isOriginalValueChanged, setIsOriginalValueChanged ] = useState(false)
+    const [ documentType, setDocumentType ] = useState("cpf")
 
     const { register, getValues, setValue, reset } = useForm({
         defaultValues: data || {}
@@ -69,7 +87,13 @@ function ProdutorRuralForm({
     const handleChangeForm = () => {
         const currentValues = {...data, ...getValues()}
         if (JSON.stringify(currentValues) !== JSON.stringify(data)) {
-            onChangeValue(currentValues)
+
+            const newCurrentValues = {
+                ...currentValues,
+                cpf: currentValues.cpf ? RemoveMask(currentValues.cpf) : '',
+                cnpj: currentValues.cnpj ? RemoveMask(currentValues.cnpj) : ''
+            };
+            onChangeValue(newCurrentValues)
         } else {
             onResetValue()
         }
@@ -84,6 +108,54 @@ function ProdutorRuralForm({
                     <label className="form-label">Nome da Fazenda</label>
                     <input type="text" className="form-control" {...register("nome_fazenda")}/>
                 </div>
+                <div className="col-auto">
+                    <label className="form-label">Tipo de Documento</label>
+                    <div>
+                       <div className="form-check form-check-inline">
+                            <input 
+                                type="radio" 
+                                value="cpf" 
+                                checked={documentType === 'cpf'}
+                                onChange={() => setDocumentType('cpf')}
+                            /> CPF  
+                        </div>
+                        <div className="form-check form-check-inline">
+                            <input 
+                                type="radio" 
+                                value="cnpj" 
+                                checked={documentType === 'cnpj'}
+                                onChange={() => setDocumentType('cnpj')}
+                            /> CNPJ
+                        </div>
+                    </div>
+                </div>
+                {
+                    documentType === "cpf"
+                    && <div className="col-auto">
+                            <label className="form-label">{documentType.toUpperCase()}</label>
+                            <input 
+                                type="text" 
+                                className="form-control" 
+                                {...register("cpf")}
+                                onChange={(e) => {
+                                    e.target.value = CPFMask(e.target.value);
+                                }}/>
+                        </div>
+                }
+                {
+                    documentType === "cnpj"
+                    && <div className="col-auto">
+                            <label className="form-label">{documentType.toUpperCase()}</label>
+                            <input 
+                                type="text" 
+                                className="form-control" 
+                                {...register("cnpj")}
+                                onChange={(e) => {
+                                    e.target.value = CNPJMask(e.target.value);
+                                }}
+                            />
+                        </div>
+                }
                 <div className="col-8">
                     <label className="form-label">Cidade</label>
                     <input type="text" className="form-control" {...register("cidade")}/>
