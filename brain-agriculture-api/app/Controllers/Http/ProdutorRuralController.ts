@@ -3,11 +3,11 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import ProdutorRural from 'App/Models/ProdutorRural'
 
 const PRODUTOR_RURAL_COLUMNS = [
-    'cpf', 
-    'cnpj', 
-    'nome_produtor', 
-    'nome_fazenda', 
-    'cidade', 
+    'nome_produtor',
+    'tipo_documento',
+    'numero_documento',
+    'nome_fazenda',
+    'cidade',
     'estado',
     'area_total_hectares',
     'area_agricultavel_hectares',

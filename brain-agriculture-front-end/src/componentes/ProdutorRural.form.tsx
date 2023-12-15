@@ -19,8 +19,8 @@ const CNPJMask = (cnpj:any) => cnpj
 const RemoveMask = (valor:string) => valor.replace(/\D/g, '')
 interface ProdutorRuralType {
     id: number;
-    cpf: string;
-    cnpj: string;
+    tipo_documento: string;
+    numero_documento: string;
     nome_produtor: string;
     nome_fazenda: string;
     cidade: string;
@@ -65,7 +65,6 @@ function ProdutorRuralForm({
         }
     }, [valueForUpdate])
 
-
     const refreshForm = () => {
         if (data) {
             fillForm(valueForUpdate || data)
@@ -84,20 +83,22 @@ function ProdutorRuralForm({
         }
     }
 
-    const handleChangeForm = () => {
+    const changeForm = () => {
         const currentValues = {...data, ...getValues()}
         if (JSON.stringify(currentValues) !== JSON.stringify(data)) {
 
             const newCurrentValues = {
                 ...currentValues,
-                cpf: currentValues.cpf ? RemoveMask(currentValues.cpf) : '',
-                cnpj: currentValues.cnpj ? RemoveMask(currentValues.cnpj) : ''
+                tipo_documento: documentType,
+                numero_documento:  currentValues.numero_documento ? RemoveMask(currentValues.numero_documento) : undefined
             };
             onChangeValue(newCurrentValues)
         } else {
             onResetValue()
         }
     }
+
+    const handleChangeForm = () => changeForm()
 
     return (<form className="row g-3" onChange={() => handleChangeForm()}>
                 <div className="col-md-12">
@@ -129,33 +130,18 @@ function ProdutorRuralForm({
                         </div>
                     </div>
                 </div>
-                {
-                    documentType === "cpf"
-                    && <div className="col-auto">
-                            <label className="form-label">{documentType.toUpperCase()}</label>
-                            <input 
-                                type="text" 
-                                className="form-control" 
-                                {...register("cpf")}
-                                onChange={(e) => {
-                                    e.target.value = CPFMask(e.target.value);
-                                }}/>
-                        </div>
-                }
-                {
-                    documentType === "cnpj"
-                    && <div className="col-auto">
-                            <label className="form-label">{documentType.toUpperCase()}</label>
-                            <input 
-                                type="text" 
-                                className="form-control" 
-                                {...register("cnpj")}
-                                onChange={(e) => {
-                                    e.target.value = CNPJMask(e.target.value);
-                                }}
-                            />
-                        </div>
-                }
+                <div className="col-auto">
+                    <label className="form-label">Número do {documentType.toUpperCase()}</label>
+                    <input 
+                        type="text" 
+                        className="form-control" 
+                        {...register("numero_documento")}
+                        onChange={(e) => {
+                            const Mask = documentType === 'cnpj' ? CNPJMask : CPFMask
+                            e.target.value = Mask(e.target.value);
+                        }}
+                    />
+                </div>
                 <div className="col-8">
                     <label className="form-label">Cidade</label>
                     <input type="text" className="form-control" {...register("cidade")}/>

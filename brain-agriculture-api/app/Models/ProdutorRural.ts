@@ -9,10 +9,10 @@ export default class ProdutorRural extends BaseModel {
   public id: number
 
   @column()
-  public cpf: string
+  public tipoDocumento: string
 
   @column()
-  public cnpj: string
+  public numeroDocumento: string
 
   @column()
   public nomeProdutor: string

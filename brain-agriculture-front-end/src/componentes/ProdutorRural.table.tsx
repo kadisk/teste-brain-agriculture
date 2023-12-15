@@ -61,25 +61,30 @@ function ProdutorRuralTable() {
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>CPF</th>
-                        <th>CNPJ</th>
+                        <th>Tipo Documento</th>
+                        <th>Numero do Documento</th>
                         <th>Nome do Produtor</th>
                         <th>Nome da Fazenda</th>
                         <th>Cidade</th>
                         <th>Estado</th>
-                        <th></th>
+                        <th>Área de Vegetação</th>
+                        <th>Área de Agricultável</th>
+                        <th>Área Total</th>
                     </tr>
                 </thead>
                 <tbody>
                     {produtores && produtores.map((produtor:any) => (
                         <tr key={produtor.id}>
                             <td>{produtor.id}</td>
-                            <td>{produtor.cpf}</td>
-                            <td>{produtor.cnpj}</td>
+                            <td>{produtor.tipo_documento}</td>
+                            <td>{produtor.numero_documento}</td>
                             <td>{produtor.nome_produtor}</td>
                             <td>{produtor.nome_fazenda}</td>
                             <td>{produtor.cidade}</td>
                             <td>{produtor.estado}</td>
+                            <td>{produtor.area_vegetacao_hectares} ha</td>
+                            <td>{produtor.area_agricultavel_hectares} ha</td>
+                            <td>{produtor.area_total_hectares} ha</td>
                             <td>
                             <div className="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <Button variant="info" onClick={() => handleEdit(produtor.id)}>Editar</Button>

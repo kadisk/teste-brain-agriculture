@@ -23,7 +23,7 @@ interface ProdutorRuralType {
     updated_at: string
 }
 
-async function getData(id:number) {
+async function getProdutorRural(id:number) {
     try {
         const res = await fetch(`http://localhost:3333/produtor-rural/${id}`)
         if (!res.ok) {
@@ -42,7 +42,6 @@ interface Props {
     onClose: any
     onUpdate?: any
     onRegister?: any
-    
 }
 
 function ProdutorRuralFormModal({id, onClose, onUpdate, onRegister}:Props) {
@@ -58,30 +57,19 @@ function ProdutorRuralFormModal({id, onClose, onUpdate, onRegister}:Props) {
 
     const fetchData = async () => {
         if (id){
-            const data = await getData(id)
+            const data = await getProdutorRural(id)
             setValueLoader(data)
         }
     }
 
-    const handleChangeValue = (valueForUpdate:any) => {
-        setValueForUpdate(valueForUpdate)
-    }
-
-    const handleResetValue = () => {
-        setValueForUpdate(undefined)
-    }
-
-    const handleUpdateProcess = () => {
-        setIsConfirmationMode(true)
-    }
-
-    const handleCancelConfirmation = () => {
-        setIsConfirmationMode(false)
-    }
-
-    const handleResetUpdateProcess = () => {
-        setValueForUpdate(undefined)
-    }
+    const handleChangeValue = (valueForUpdate:any) =>setValueForUpdate(valueForUpdate)
+    const handleResetValue = () => setValueForUpdate(undefined)
+    const handleUpdateProcess = () =>  setIsConfirmationMode(true)
+    const handleCancelConfirmation = () => setIsConfirmationMode(false)
+    const handleResetUpdateProcess = () =>setValueForUpdate(undefined)
+    const handleUpdate = () => updateValue()
+    const handleRegister = () => saveValue()
+    const handleRegisterProcess = () => setIsConfirmationMode(true)
 
     const updateValue = async () => {
         try {
@@ -123,14 +111,6 @@ function ProdutorRuralFormModal({id, onClose, onUpdate, onRegister}:Props) {
         }
     }
 
-    const handleUpdate = () => {
-        updateValue()
-    }
-
-    const handleRegister = () => {
-        saveValue()
-    }
-
     const getFormModalTitle = () => id 
         ? "Alteração de Cadastro"
         : "Cadastro de Produtor Rural"
@@ -142,17 +122,6 @@ function ProdutorRuralFormModal({id, onClose, onUpdate, onRegister}:Props) {
     const getConfirmationModalSubtitle = () => id 
         ? "Detalhes da Alteração:"
         : "Detalhes do Novo Cadastro:"
-
-    const handleRegisterProcess = () => {
-        setIsConfirmationMode(true)
-    }
-
-    console.log("/////////////////////////////////")
-    console.log("valueLoader")
-    console.log(valueLoader)
-    console.log("valueForUpdate")
-    console.log(valueForUpdate)
-    console.log("/////////////////////////////////")
 
     return (<>
         {
