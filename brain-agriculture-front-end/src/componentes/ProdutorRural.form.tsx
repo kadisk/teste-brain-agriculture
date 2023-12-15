@@ -18,15 +18,18 @@ const CNPJMask = (cnpj:any) => cnpj
 
 const RemoveMask = (valor:string) => valor.replace(/\D/g, '')
 interface ProdutorRuralType {
-    id: number;
-    tipo_documento: string;
-    numero_documento: string;
-    nome_produtor: string;
-    nome_fazenda: string;
-    cidade: string;
-    estado: string;
-    created_at: string;
-    updated_at: string;
+    id: number
+    tipo_documento: string
+    numero_documento: string
+    nome_produtor: string
+    nome_fazenda: string
+    cidade: string
+    estado: string
+    area_vegetacao_hectares: number
+    area_agricultavel_hectares: number
+    area_total_hectares: number
+    created_at: string
+    updated_at: string
 }
 interface Props{
     data:ProdutorRuralType|undefined
@@ -79,6 +82,9 @@ function ProdutorRuralForm({
         if (values) {
             Object.keys(values).forEach((key:any) => {
                 setValue(key, values[key])
+                if(key === "tipo_documento"){
+                    setDocumentType(values[key])
+                }
             })
         }
     }
@@ -91,7 +97,7 @@ function ProdutorRuralForm({
                 ...currentValues,
                 tipo_documento: documentType,
                 numero_documento:  currentValues.numero_documento ? RemoveMask(currentValues.numero_documento) : undefined
-            };
+            }
             onChangeValue(newCurrentValues)
         } else {
             onResetValue()
@@ -99,6 +105,10 @@ function ProdutorRuralForm({
     }
 
     const handleChangeForm = () => changeForm()
+
+    const handleChangeDocumentType = (newDocumentType:string) => {
+        setDocumentType(newDocumentType)
+    }
 
     return (<form className="row g-3" onChange={() => handleChangeForm()}>
                 <div className="col-md-12">
@@ -117,7 +127,7 @@ function ProdutorRuralForm({
                                 type="radio" 
                                 value="cpf" 
                                 checked={documentType === 'cpf'}
-                                onChange={() => setDocumentType('cpf')}
+                                onChange={() => handleChangeDocumentType('cpf')}
                             /> CPF  
                         </div>
                         <div className="form-check form-check-inline">
@@ -125,7 +135,7 @@ function ProdutorRuralForm({
                                 type="radio" 
                                 value="cnpj" 
                                 checked={documentType === 'cnpj'}
-                                onChange={() => setDocumentType('cnpj')}
+                                onChange={() => handleChangeDocumentType('cnpj')}
                             /> CNPJ
                         </div>
                     </div>
@@ -138,7 +148,7 @@ function ProdutorRuralForm({
                         {...register("numero_documento")}
                         onChange={(e) => {
                             const Mask = documentType === 'cnpj' ? CNPJMask : CPFMask
-                            e.target.value = Mask(e.target.value);
+                            e.target.value = Mask(e.target.value)
                         }}
                     />
                 </div>
@@ -179,8 +189,22 @@ function ProdutorRuralForm({
                         <option value="TO">Tocantins</option>
                     </select>
                 </div>
+                <div className="col-4">
+                    <label className="form-label">Área de Vegetação (ha)</label>
+                    <input type="number" className="form-control" defaultValue={0} {...register("area_vegetacao_hectares")}/>
+                </div>
+                <div className="col-4">
+                    <label className="form-label">Área Agricultável (ha)</label>
+                    <input type="number" className="form-control" defaultValue={0} {...register("area_agricultavel_hectares")}/>
+                </div>
+                <div className="col-4">
+                    <label className="form-label">Área Total (ha)</label>
+                    <input type="number" className="form-control" defaultValue={0} {...register("area_total_hectares")}/>
+                </div>
             </form>
     )
 }
+
+
 
 export default ProdutorRuralForm
