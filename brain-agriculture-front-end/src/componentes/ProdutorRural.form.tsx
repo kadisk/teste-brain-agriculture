@@ -93,7 +93,9 @@ function ProdutorRuralForm({
             const newCurrentValues = {
                 ...currentValues,
                 tipo_documento: documentType,
-                numero_documento:  currentValues.numero_documento ? RemoveMask(currentValues.numero_documento) : undefined
+                numero_documento: currentValues.numero_documento
+                    ? RemoveMask(currentValues.numero_documento) 
+                    : undefined
             }
             onChangeValue(newCurrentValues)
         } else {

@@ -26,6 +26,8 @@ export default class ProdutorRuralController {
     public async register({ request, response }: HttpContextContract) {
         const data = request.only(PRODUTOR_RURAL_COLUMNS)
         const produtor = await ProdutorRural.create(data)
+        const culturaIds = request.input('culturaIds', [])
+        await produtor.related('culturas').attach(culturaIds)
         return response.status(201).json(produtor)
     }
 

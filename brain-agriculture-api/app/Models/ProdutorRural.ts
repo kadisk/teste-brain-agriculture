@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, manyToMany, ManyToMany } from '@ioc:Adonis/Lucid/Orm'
+import Cultura from './Cultura'
 
 export default class ProdutorRural extends BaseModel {
 
@@ -34,6 +35,11 @@ export default class ProdutorRural extends BaseModel {
 
   @column()
   public areaVegetacaoHectares: number
+
+  @manyToMany(() => Cultura, {
+    pivotTable: 'produtor_rural_culturas'
+  })
+  public culturas: ManyToMany<typeof Cultura>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
