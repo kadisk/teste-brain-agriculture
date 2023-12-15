@@ -30,3 +30,7 @@ Route.group(() => {
   Route.get('/:id', 'ProdutorRuralController.show')
   Route.put('/:id', 'ProdutorRuralController.update')
 }).prefix('/produtor-rural')
+
+Route.group(() => {
+  Route.get('/list', 'CulturaController.list')
+}).prefix('/culturas')

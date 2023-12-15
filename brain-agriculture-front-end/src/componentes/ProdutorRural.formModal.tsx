@@ -37,6 +37,23 @@ async function getProdutorRural(id:number) {
     }
 }
 
+
+async function getCulturas() {
+    try {
+        const res = await fetch(`http://localhost:3333/culturas/list`)
+        if (!res.ok) {
+            throw new Error(`Erro ao buscar dados: ${res.status}`)
+        }
+        
+        return  await res.json()
+    } catch (error) {
+        console.error(error)
+        return []
+    }
+}
+
+
+
 interface Props {
     id?:number
     onClose: any
@@ -50,12 +67,19 @@ function ProdutorRuralFormModal({id, onClose, onUpdate, onRegister}:Props) {
     const [ valueForUpdate, setValueForUpdate ] = useState<ProdutorRuralType>()
     const [isConfirmationMode, setIsConfirmationMode] = useState(false)
 
+    const [ culturas, setCulturas ] = useState<any>()
+
     useEffect(() => {
-        
-        fetchData()
+        fetchCulturas()
+        fetchProdutorRural()
     }, [])
 
-    const fetchData = async () => {
+    const fetchCulturas = async () => {
+        const culturas = await getCulturas()
+        setCulturas(culturas)
+    }
+
+    const fetchProdutorRural = async () => {
         if (id){
             const data = await getProdutorRural(id)
             setValueLoader(data)
@@ -156,11 +180,13 @@ function ProdutorRuralFormModal({id, onClose, onUpdate, onRegister}:Props) {
                     <ModalTitle>{getFormModalTitle()}</ModalTitle>
                     </ModalHeader>
                     <ModalBody>
-                        <ProdutorRuralForm 
+                        {culturas && <ProdutorRuralForm 
+                            culturas={culturas}
                             valueForUpdate={valueForUpdate}
                             data={valueLoader} 
                             onChangeValue={(valueForUpdate:any)=> handleChangeValue(valueForUpdate)}
                             onResetValue={handleResetValue}/>
+                        }
                     </ModalBody>
                     <ModalFooter>
                         <Button variant="secondary" onClick={()=> onClose()}>Cancelar</Button>

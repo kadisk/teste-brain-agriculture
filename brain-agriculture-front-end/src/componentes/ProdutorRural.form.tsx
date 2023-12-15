@@ -36,9 +36,11 @@ interface Props{
     valueForUpdate:ProdutorRuralType|undefined
     onChangeValue:any
     onResetValue: any
+    culturas: any[]
 }
 
 function ProdutorRuralForm({
+    culturas,
     data,
     valueForUpdate,
     onChangeValue,
@@ -92,6 +94,9 @@ function ProdutorRuralForm({
 
             const newCurrentValues = {
                 ...currentValues,
+                culturaIds: Object.entries(currentValues.culturaIds)
+                            .filter(([key, value]) => value)
+                            .map(([key]) => key),
                 tipo_documento: documentType,
                 numero_documento: currentValues.numero_documento
                     ? RemoveMask(currentValues.numero_documento) 
@@ -196,6 +201,26 @@ function ProdutorRuralForm({
                 <div className="col-4">
                     <label className="form-label">Área Total (ha)</label>
                     <input type="number" className="form-control" defaultValue={0} {...register("area_total_hectares")}/>
+                </div>
+                <div className="col-12">
+                    <label className="form-label">Culturas</label>
+                    <div>
+                    {
+                        culturas.map((cultura) => (
+                        <div key={cultura.id} className="form-check form-check-inline">
+                            <input 
+                                className="form-check-input"
+                                type="checkbox"
+                                id={`cultura-${cultura.id}`}
+                                value={cultura.id}
+                                {...register(`culturaIds.${cultura.id}`)}
+                            />
+                            <label className="form-check-label" htmlFor={`cultura-${cultura.id}`}>
+                                {cultura.nome}
+                            </label>
+                        </div>
+                    ))}
+                    </div>
                 </div>
             </form>
     )
