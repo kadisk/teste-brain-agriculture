@@ -82,9 +82,6 @@ function ProdutorRuralForm({
         if (values) {
             Object.keys(values).forEach((key:any) => {
                 setValue(key, values[key])
-                if(key === "tipo_documento"){
-                    setDocumentType(values[key])
-                }
             })
         }
     }
@@ -108,6 +105,7 @@ function ProdutorRuralForm({
 
     const handleChangeDocumentType = (newDocumentType:string) => {
         setDocumentType(newDocumentType)
+        //changeForm()
     }
 
     return (<form className="row g-3" onChange={() => handleChangeForm()}>
@@ -146,10 +144,6 @@ function ProdutorRuralForm({
                         type="text" 
                         className="form-control" 
                         {...register("numero_documento")}
-                        onChange={(e) => {
-                            const Mask = documentType === 'cnpj' ? CNPJMask : CPFMask
-                            e.target.value = Mask(e.target.value)
-                        }}
                     />
                 </div>
                 <div className="col-8">
