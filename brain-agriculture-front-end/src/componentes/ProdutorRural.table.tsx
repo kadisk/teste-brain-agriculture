@@ -3,23 +3,13 @@ import React, { useEffect, useState } from 'react'
 
 import ProdutorRuralFormModal from "./ProdutorRural.formModal"
 
+import getAllProdutorRural from "../api/getAllProdutorRural"
+
 import {
     Button
 } from 'react-bootstrap'
 
-async function getData() {
-    try {
-        const res = await fetch('http://localhost:3333/produtor-rural/list')
-        if (!res.ok) {
-            throw new Error(`Erro ao buscar dados: ${res.status}`)
-        }
-        
-        return  await res.json()
-    } catch (error) {
-        console.error(error)
-        return []
-    }
-}
+
 
 function ProdutorRuralTable() {
 
@@ -31,7 +21,7 @@ function ProdutorRuralTable() {
     }, [])
 
     const refreshTable = async () => {
-        const data = await getData()
+        const data = await getAllProdutorRural()
         setProdutores(data)
     }
 
