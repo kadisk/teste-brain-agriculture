@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react'
-
+import { ToastContainer, toast } from 'react-toastify'
 import ProdutorRuralFormModal from "./ProdutorRural.formModal"
 
 import {
@@ -22,6 +22,7 @@ export default function CadastroProdutorRural() {
     }
 
     const handleRegister = () => {
+        toast.success(`Produtor Rural cadastrado com sucesso`)
         setIsRegisterMode(false)
     }
 
@@ -41,6 +42,7 @@ export default function CadastroProdutorRural() {
                 !isRegisterMode && <ProdutorRuralTable />
             }
         </main>
+        <ToastContainer />
         </>
 	)
 }

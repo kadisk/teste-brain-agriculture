@@ -1,5 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../styles/global.css'
+import 'react-toastify/dist/ReactToastify.css'
 
 import HeaderMain from "../componentes/HeaderMain"
 

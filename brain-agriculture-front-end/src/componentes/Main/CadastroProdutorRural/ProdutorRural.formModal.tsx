@@ -8,7 +8,7 @@ import {
     Button,
     ModalFooter
 } from 'react-bootstrap'
-
+import { ToastContainer, toast } from 'react-toastify'
 import ProdutorRuralForm from "./ProdutorRural.form"
 
 interface ProdutorRuralType {
@@ -37,7 +37,6 @@ async function getProdutorRural(id:number) {
     }
 }
 
-
 async function getCulturas() {
     try {
         const res = await fetch(`http://localhost:3333/culturas/list`)
@@ -51,8 +50,6 @@ async function getCulturas() {
         return []
     }
 }
-
-
 
 interface Props {
     id?:number
@@ -112,6 +109,7 @@ function ProdutorRuralFormModal({id, onClose, onUpdate, onRegister}:Props) {
                 onUpdate()
             }
         } catch (error) {
+            toast.error(`Não foi possível alteração do cadastro verifique os campos novamente`)
         }
     }
 
@@ -130,8 +128,11 @@ function ProdutorRuralFormModal({id, onClose, onUpdate, onRegister}:Props) {
                     throw new Error(`Erro no cadastro: ${response.status}`)
                 }
                 onRegister()
+            } else {
+                toast.error(`Cadastro inválido`)
             }
-        } catch (error) {
+        } catch (error:any) {
+            toast.error(`Não foi possível o cadastro  e Produtor Rural verifique os campos novamente`)
         }
     }
 
@@ -207,6 +208,7 @@ function ProdutorRuralFormModal({id, onClose, onUpdate, onRegister}:Props) {
                     </ModalFooter>
                 </Modal>
         }
+        <ToastContainer />
         </>)
 }
 

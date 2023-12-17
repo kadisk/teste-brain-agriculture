@@ -123,7 +123,6 @@ function ProdutorRuralForm({
                     : undefined
             }
             const nnewCurrentValues = RemoveProperty(newCurrentValues, "culturas")
-            console.log(nnewCurrentValues)
             onChangeValue(nnewCurrentValues)
         } else {
             onResetValue()

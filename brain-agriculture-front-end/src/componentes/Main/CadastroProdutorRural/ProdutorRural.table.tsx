@@ -1,8 +1,8 @@
 "use client"
 import React, { useEffect, useState } from 'react'
+import { ToastContainer, toast } from 'react-toastify'
 
 import ProdutorRuralFormModal from "./ProdutorRural.formModal"
-
 import getAllProdutorRural from "../../../api/getAllProdutorRural"
 
 import {
@@ -32,6 +32,7 @@ function ProdutorRuralTable() {
     }
 
     const handleUpdate = () => {
+        toast.warning(`Cadastrado de Produtor Rural foi alterado!`)
         setIdProdutorForEdit(undefined)
         refreshTable()
     }
@@ -83,6 +84,7 @@ function ProdutorRuralTable() {
                     ))}
                 </tbody>
             </table>
+            <ToastContainer/>
         </div>
     )
 }
