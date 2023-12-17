@@ -7,7 +7,7 @@ import {
 	Button
 } from 'react-bootstrap'
 
-import ProdutorRuralTable from "../componentes/ProdutorRural.table"
+import ProdutorRuralTable from "./ProdutorRural.table"
 
 export default function CadastroProdutorRural() {
 
@@ -32,7 +32,7 @@ export default function CadastroProdutorRural() {
                 onRegister={() => handleRegister()}
                 onClose={() => handleCancelRegister()}/>
         }
-		<main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+		<main>
             <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 className="h2">Produtor Rural</h1><Button onClick={() => handleRegisterProcess()}>Cadastrar Produtor Rural</Button>
             </div>

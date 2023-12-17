@@ -3,13 +3,11 @@ import React, { useEffect, useState } from 'react'
 
 import ProdutorRuralFormModal from "./ProdutorRural.formModal"
 
-import getAllProdutorRural from "../api/getAllProdutorRural"
+import getAllProdutorRural from "../../../api/getAllProdutorRural"
 
 import {
     Button
 } from 'react-bootstrap'
-
-
 
 function ProdutorRuralTable() {
 

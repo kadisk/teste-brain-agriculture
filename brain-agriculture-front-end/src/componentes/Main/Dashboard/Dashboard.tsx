@@ -6,14 +6,14 @@ import {
     Row
 } from 'react-bootstrap'
 
-import getTotalFazendas from "../api/getTotalFazendas"
-import getTotalHectares from "../api/getTotalHectares"
-import getAllProdutorRural from "../api/getAllProdutorRural"
+import getTotalFazendas from "../../../api/getTotalFazendas"
+import getTotalHectares from "../../../api/getTotalHectares"
+import getAllProdutorRural from "../../../api/getAllProdutorRural"
 
-import UsoDoSoloChart from "../componentes/charts/UsoDoSoloChart"
-import FazendaPorCulturaChart from "../componentes/charts/FazendaPorCulturaChart"
-import FazendaPorEstadoChart from "../componentes/charts/FazendaPorEstadoChart"
-import HectaresPorEstadoChart from "../componentes/charts/HectaresPorEstadoChart"
+import UsoDoSoloChart from "./charts/UsoDoSoloChart"
+import FazendaPorCulturaChart from "./charts/FazendaPorCulturaChart"
+import FazendaPorEstadoChart from "./charts/FazendaPorEstadoChart"
+import HectaresPorEstadoChart from "./charts/HectaresPorEstadoChart"
 
 export default function CadastroProdutorRural() {
 
@@ -32,7 +32,7 @@ export default function CadastroProdutorRural() {
     }
 
 	return (
-        <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <main>
             <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-1 mb-2 border-bottom">
                 <h1 className="h2">Dashboard</h1>
             </div>
