@@ -19,7 +19,9 @@ const NOT_FOUND_MESSAGE = "Produtor Rural não encontrado"
 export default class ProdutorRuralController {
 
     public async list({ response }: HttpContextContract) {
-        const produtores = await ProdutorRural.all()
+        const produtores = await ProdutorRural.query()
+                                            .preload('culturas')
+                                            .orderBy('id')
         return response.json(produtores)
     }
 
