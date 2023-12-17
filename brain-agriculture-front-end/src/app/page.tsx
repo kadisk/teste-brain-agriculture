@@ -1,33 +1,27 @@
+"use client"
+import { useState } from 'react'
 import {
 	Container,
-	Row
+	Tab,
+	Tabs
 } from 'react-bootstrap'
 
 import CadastroProdutorRural from "../componentes/Main/CadastroProdutorRural"
 import Dashboard from "../componentes/Main/Dashboard"
 
 export default function Home() {
-	return (
-		<Container fluid>
-			<Row>
-				{/*<div className="sidebar border border-right col-md-3 col-lg-2 p-0">
-					<ul className="nav flex-column mt-3">
-						<li className="nav-item">
-							<a className="nav-link">
-								Dashboard
-							</a>
-						</li>
-						<li className="nav-item">
-							<a className="nav-link">
-								Produtor Rural
-							</a>
-						</li>
-					</ul>
+    const [key, setKey] = useState("dashboard")
 
-	</div>*/}
-				<Dashboard />
-				<CadastroProdutorRural/>
-			</Row>
-		</Container>
-	)
+    return (
+        <Container>
+            <Tabs defaultActiveKey="dashboard" className="mt-3" onSelect={(k) => setKey(k)}>
+                <Tab eventKey="dashboard" title="Dashboard" key="dashboardTab">
+                    {key === "dashboard" && <Dashboard />}
+                </Tab>
+                <Tab eventKey="cadastro" title="Cadastro de Produtor" key="cadastroTab">
+                    {key === "cadastro" && <CadastroProdutorRural />}
+                </Tab>
+            </Tabs>
+        </Container>
+    )
 }

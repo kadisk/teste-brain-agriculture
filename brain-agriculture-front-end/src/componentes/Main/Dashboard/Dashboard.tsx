@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react'
 
 import {
 	Badge,
-    Row
+    Row,
+    Form
 } from 'react-bootstrap'
 
 import getTotalFazendas from "../../../api/getTotalFazendas"
@@ -15,11 +16,18 @@ import FazendaPorCulturaChart from "./charts/FazendaPorCulturaChart"
 import FazendaPorEstadoChart from "./charts/FazendaPorEstadoChart"
 import HectaresPorEstadoChart from "./charts/HectaresPorEstadoChart"
 
+const DashboardContent = ({children}:any) => 
+    <div className="pb-1 mb-2 border-bottom">
+        {children}
+    </div>
+
 export default function CadastroProdutorRural() {
 
     const [ totalFazendas, setTotalFazendas ] = useState(0)
     const [ totalHectares, setTotalHectares ] = useState(0)
     const [ produtorRuralList, setProdutorRuralList ] = useState()
+
+    const [selectedOption, setSelectedOption] = useState("estado")
 
     useEffect(() => {
         fetchAllData()
@@ -31,47 +39,62 @@ export default function CadastroProdutorRural() {
         setProdutorRuralList(await getAllProdutorRural()) 
     }
 
+    const handleSelectChange = (event:any) => {
+        setSelectedOption(event.target.value)
+    }
+
+    const renderDashboardContent = () => {
+        switch(selectedOption){
+            case "solo":
+                return <Row className="justify-content-around">
+                            <div className="col-auto">
+                                <UsoDoSoloChart 
+                                    produtorRuralList={produtorRuralList}/>
+                            </div>
+                        </Row>
+            case "cultura":
+                return <Row className="justify-content-around">
+                            <div className="col-auto">
+                                <FazendaPorCulturaChart 
+                                    produtorRuralList={produtorRuralList}/>
+                            </div>
+                        </Row>
+            case "estado": 
+                return <Row className="justify-content-around">
+                            <div className="col-auto">
+                                <FazendaPorEstadoChart 
+                                    produtorRuralList={produtorRuralList}/>
+                            </div>
+                            <div className="col-auto">
+                                <HectaresPorEstadoChart 
+                                    produtorRuralList={produtorRuralList}/>
+                            </div>
+                        </Row>
+            default:
+                return "No content"
+        }
+    }
+
 	return (
         <main>
-            <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-1 mb-2 border-bottom">
-                <h1 className="h2">Dashboard</h1>
+            <div className="d-flex justify-content-around border-bottom mt-2">
+                <h5>Total de Fazenda <strong>{totalFazendas}</strong></h5>
+                <h5>Total Hectares <strong>{totalHectares}</strong> <Badge bg="secondary">ha</Badge></h5>
             </div>
-            <div className="d-flex justify-content-around border-bottom">
-                <h4>Total de Fazenda <strong>{totalFazendas}</strong></h4>
-                <h4>Total Hectares <strong>{totalHectares}</strong> <Badge bg="secondary">ha</Badge></h4>
-            </div>
-            <div className="pt-2 pb-1 mb-2 border-bottom">
-                <div className="col-12"><h5>Por Uso do Solo</h5></div>
-                <Row className="justify-content-around">
-                <div className="col-auto">
-                    <UsoDoSoloChart 
-                        produtorRuralList={produtorRuralList}/>
+            <div className="p-1 mb-2 border-bottom">
+                <div className="col-4">
+                    <Form.Select className="col-4" 
+                        value={selectedOption}
+                        onChange={handleSelectChange}>
+                        <option value="estado">Por Estado</option>
+                        <option value="cultura">Por Cultura</option>
+                        <option value="solo">Por Usos no Solo</option>
+                    </Form.Select>
                 </div>
-                </Row>
             </div>
-            <div className="pt-2 pb-1 mb-2 border-bottom">
-                <div className="col-12"><h5>Por Cultura</h5></div>
-                <Row className="justify-content-around">
-                <div className="col-auto">
-                    <FazendaPorCulturaChart 
-                        produtorRuralList={produtorRuralList}/>
-                </div>
-                </Row>
-            </div>
-            <div className="pt-2 pb-1 mb-2 border-bottom">
-                <div className="col-12"><h5>Por Estado</h5></div>
-                <Row className="justify-content-around">
-                <div className="col-auto">
-                    <FazendaPorEstadoChart 
-                        produtorRuralList={produtorRuralList}/>
-                </div>
-                <div className="col-auto">
-                    <HectaresPorEstadoChart 
-                        produtorRuralList={produtorRuralList}/>
-                </div>
-                </Row>
-            </div>
-            
+            <DashboardContent>
+                {renderDashboardContent()}
+            </DashboardContent>
         </main>
 	)
 }
