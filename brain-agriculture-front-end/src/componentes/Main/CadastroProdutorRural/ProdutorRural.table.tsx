@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 
-import ProdutorRuralFormModal from "./ProdutorRural.formModal"
+import FormProdutorRuralModal from "./FormProdutorRural.modal"
+import RemoveProdutorRuralModal from "./RemoveProdutorRural.modal"
 import getAllProdutorRural from "../../../api/getAllProdutorRural"
 
 import {
@@ -13,6 +14,7 @@ function ProdutorRuralTable() {
 
     const [produtores, setProdutores] = useState([])
     const [ idProdutorForEdit, setIdProdutorForEdit ] = useState()
+    const [ idProdutorForRemove, setIdProdutorForRemove ] = useState()
 
     useEffect(() => {
         refreshTable()
@@ -23,13 +25,10 @@ function ProdutorRuralTable() {
         setProdutores(data)
     }
 
-    const handleEdit = (idProdutor:any) => {
-        setIdProdutorForEdit(idProdutor)
-    }
-
-    const handleCancelEdit = () => {
-        setIdProdutorForEdit(undefined)
-    }
+    const handleEdit = (idProdutor:any) => setIdProdutorForEdit(idProdutor)
+    const handleRemoveProcess = (idProdutor:any) =>  setIdProdutorForRemove(idProdutor)
+    const handleCancelEdit = () => setIdProdutorForEdit(undefined)
+    const handleCancelRemove = () => setIdProdutorForRemove(undefined)
 
     const handleUpdate = () => {
         toast.warning(`Cadastrado de Produtor Rural foi alterado!`)
@@ -37,15 +36,28 @@ function ProdutorRuralTable() {
         refreshTable()
     }
 
+    const handleRemove = () => {
+        setIdProdutorForRemove(undefined)
+        refreshTable()
+        toast.warning(`Cadastro removido`)
+    }
+
     return (
         <div className="table-responsive small">
             { 
                 idProdutorForEdit 
-                && <ProdutorRuralFormModal 
+                && <FormProdutorRuralModal 
                         id={idProdutorForEdit}
                         onUpdate={() => handleUpdate()}
                         onClose={() => handleCancelEdit()}/>
                 }
+            {
+                idProdutorForRemove
+                && <RemoveProdutorRuralModal 
+                        id={idProdutorForRemove}
+                        onRemove={() => handleRemove()}
+                        onClose={() => handleCancelRemove()}/>
+            }
             <table className="table table-striped table-sm">
                 <thead>
                     <tr>
@@ -77,7 +89,7 @@ function ProdutorRuralTable() {
                             <td>
                             <div className="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <Button variant="info" onClick={() => handleEdit(produtor.id)}>Editar</Button>
-                                <Button variant="secondary">Remover</Button>
+                                <Button variant="secondary" onClick={() => handleRemoveProcess(produtor.id)}>Remover</Button>
                                 </div>
                             </td>
                         </tr>

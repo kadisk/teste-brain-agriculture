@@ -10,6 +10,7 @@ import {
 } from 'react-bootstrap'
 import { ToastContainer, toast } from 'react-toastify'
 import ProdutorRuralForm from "./ProdutorRural.form"
+import ProdutorRuralDetails from "./ProdutorRuralDetails"
 
 interface ProdutorRuralType {
     id: number
@@ -23,33 +24,10 @@ interface ProdutorRuralType {
     updated_at: string
 }
 
-async function getProdutorRural(id:number) {
-    try {
-        const res = await fetch(`http://localhost:3333/produtor-rural/${id}`)
-        if (!res.ok) {
-            throw new Error(`Erro ao buscar dados: ${res.status}`)
-        }
-        
-        return  await res.json()
-    } catch (error) {
-        console.error(error)
-        return []
-    }
-}
-
-async function getCulturas() {
-    try {
-        const res = await fetch(`http://localhost:3333/culturas/list`)
-        if (!res.ok) {
-            throw new Error(`Erro ao buscar dados: ${res.status}`)
-        }
-        
-        return  await res.json()
-    } catch (error) {
-        console.error(error)
-        return []
-    }
-}
+import getProdutorRural from "../../../api/getProdutorRural"
+import getCulturas from "../../../api/getCulturas"
+import updateProdutorRural from "../../../api/updateProdutorRural"
+import registerProdutorRural from "../../../api/registerProdutorRural"
 
 interface Props {
     id?:number
@@ -58,7 +36,7 @@ interface Props {
     onRegister?: any
 }
 
-function ProdutorRuralFormModal({id, onClose, onUpdate, onRegister}:Props) {
+function FormProdutorRuralModal({id, onClose, onUpdate, onRegister}:Props) {
 
     const [ valueLoader, setValueLoader ] = useState<ProdutorRuralType>()
     const [ valueForUpdate, setValueForUpdate ] = useState<ProdutorRuralType>()
@@ -95,17 +73,7 @@ function ProdutorRuralFormModal({id, onClose, onUpdate, onRegister}:Props) {
     const updateValue = async () => {
         try {
             if(valueForUpdate){
-                const response = await fetch(`http://localhost:3333/produtor-rural/${valueForUpdate.id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(valueForUpdate)
-                })
-        
-                if (!response.ok) {
-                    throw new Error(`Erro na atualização: ${response.status}`)
-                }
+                await updateProdutorRural(valueForUpdate)
                 onUpdate()
             }
         } catch (error) {
@@ -116,17 +84,7 @@ function ProdutorRuralFormModal({id, onClose, onUpdate, onRegister}:Props) {
     const saveValue = async () => {
         try {
             if(valueForUpdate){
-                const response = await fetch(`http://localhost:3333/produtor-rural/register`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(valueForUpdate)
-                })
-        
-                if (!response.ok) {
-                    throw new Error(`Erro no cadastro: ${response.status}`)
-                }
+                await registerProdutorRural(valueForUpdate)
                 onRegister()
             } else {
                 toast.error(`Cadastro inválido`)
@@ -155,17 +113,10 @@ function ProdutorRuralFormModal({id, onClose, onUpdate, onRegister}:Props) {
                 <ModalHeader>
                     <ModalTitle>{getConfirmationModalTitle()}</ModalTitle>
                 </ModalHeader>
-                <ModalBody>
-                    <div className="p-3 mb-2 bg-light text-dark">
-                        <h5>{getConfirmationModalSubtitle()}</h5>
-                        {
-                            valueForUpdate 
-                            && Object
-                            .entries(valueForUpdate)
-                            .map(([key, value]) => (
-                            <p key={key}><strong>{key}:</strong> {value}</p>))
-                        }
-                    </div>
+                <ModalBody style={{backgroundColor:"#eee"}}>
+                    <ProdutorRuralDetails 
+                        subtitle={getConfirmationModalSubtitle()} 
+                        values={valueForUpdate}/>
                 </ModalBody>
                 <ModalFooter>
                     <Button variant="secondary" onClick={()=> handleCancelConfirmation()}>Voltar</Button>
@@ -180,7 +131,7 @@ function ProdutorRuralFormModal({id, onClose, onUpdate, onRegister}:Props) {
                     <ModalHeader>
                     <ModalTitle>{getFormModalTitle()}</ModalTitle>
                     </ModalHeader>
-                    <ModalBody>
+                    <ModalBody style={{backgroundColor:"#eee"}}>
                         {culturas && <ProdutorRuralForm 
                             culturas={culturas}
                             valueForUpdate={valueForUpdate}
@@ -212,4 +163,4 @@ function ProdutorRuralFormModal({id, onClose, onUpdate, onRegister}:Props) {
         </>)
 }
 
-export default ProdutorRuralFormModal
+export default FormProdutorRuralModal

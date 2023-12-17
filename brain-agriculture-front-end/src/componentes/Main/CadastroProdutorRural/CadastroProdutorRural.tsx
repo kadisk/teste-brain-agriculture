@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
-import ProdutorRuralFormModal from "./ProdutorRural.formModal"
+import FormProdutorRuralModal from "./FormProdutorRural.modal"
 
 import {
 	Button
@@ -29,7 +29,7 @@ export default function CadastroProdutorRural() {
 	return (<>
         { 
             isRegisterMode 
-            && <ProdutorRuralFormModal 
+            && <FormProdutorRuralModal 
                 onRegister={() => handleRegister()}
                 onClose={() => handleCancelRegister()}/>
         }

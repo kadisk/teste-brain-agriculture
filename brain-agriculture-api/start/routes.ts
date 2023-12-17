@@ -29,6 +29,7 @@ Route.group(() => {
   Route.post('/register', 'ProdutorRuralController.register')
   Route.get('/:id', 'ProdutorRuralController.show')
   Route.put('/:id', 'ProdutorRuralController.update')
+  Route.delete('/:id', 'ProdutorRuralController.delete')
 }).prefix('/produtor-rural')
 
 Route.group(() => {

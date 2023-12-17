@@ -61,4 +61,16 @@ export default class ProdutorRuralController {
             return response.status(404).json({ message: NOT_FOUND_MESSAGE })
         }
     }
+
+    public async delete({ params, response }: HttpContextContract) {
+        try {
+            const produtor = await ProdutorRural.findOrFail(params.id)
+            await produtor.related('culturas').detach()
+            await produtor.delete()
+            return response.status(200).json({ message: 'Produtor Rural removido com sucesso' })
+        } catch (error) {
+            return response.status(404).json({ message: NOT_FOUND_MESSAGE })
+        }
+    }
+    
 }
