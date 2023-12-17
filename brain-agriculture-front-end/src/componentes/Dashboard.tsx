@@ -90,20 +90,14 @@ const aggregateCountField = (group:any, fieldName:string) => {
 }
 
 
+const ChartCard = ({title, aggregate}:any) => {
 
-const FazendaPorEstadoChart = ({produtorRuralList}:any) => {
-
-    
-    const createGraphData = () => {
-        
-        const produtorRuralByEstado = groupByProperty(produtorRuralList, "estado")
-        const totalFazendaPorEstadoAggregate = aggregateByTotalItem(produtorRuralByEstado)
-
+    const createData = () => {
         return {
-            labels: Object.keys(totalFazendaPorEstadoAggregate),
+            labels: Object.keys(aggregate),
             datasets: [
                 {
-                    data: Object.values(totalFazendaPorEstadoAggregate),
+                    data: Object.values(aggregate),
                     borderWidth: 1,
                 }
             ]
@@ -111,98 +105,56 @@ const FazendaPorEstadoChart = ({produtorRuralList}:any) => {
     }
 
     return <Card className="text-center" style={{width:"450px"}}>
-      <Card.Header>Quantidade de Fazendas</Card.Header>
-      <Card.Body>
-        {produtorRuralList && <Pie data={createGraphData()} />}
-      </Card.Body>
-    </Card>
+            <Card.Header>{title}</Card.Header>
+            <Card.Body>
+                <Pie data={createData()} />
+            </Card.Body>
+        </Card>
+}
+
+const FazendaPorEstadoChart = ({produtorRuralList}:any) => {
+    const createAggregate = () => {
+        const produtorRuralByEstado = groupByProperty(produtorRuralList || [], "estado")
+        const totalFazendaPorEstadoAggregate = aggregateByTotalItem(produtorRuralByEstado)
+        return totalFazendaPorEstadoAggregate
+    }
+    return <ChartCard 
+        title="Quantidade de Fazendas" 
+        aggregate={createAggregate()} />
 }
 
 const FazendaPorCulturaChart = ({produtorRuralList}:any) => {
-
-    
-    const createGraphData = () => {
-        
-        const totalCulturasAggregate = aggregateTotalCulturas(produtorRuralList)
-
-        return {
-            labels: Object.keys(totalCulturasAggregate),
-            datasets: [
-                {
-                    data: Object.values(totalCulturasAggregate),
-                    borderWidth: 1,
-                }
-            ]
-        }
-    }
-
-    return <Card className="text-center" style={{width:"450px"}}>
-      <Card.Header>Quantidade Total</Card.Header>
-      <Card.Body>
-        {produtorRuralList && <Pie data={createGraphData()} />}
-      </Card.Body>
-    </Card>
+    const createAggregate = () => aggregateTotalCulturas(produtorRuralList || [])
+    return <ChartCard 
+        title="Quantidade Total" 
+        aggregate={createAggregate()} />
 }
 
 const HectaresPorEstadoChart = ({produtorRuralList}:any) => {
-
-    
-    const createGraphData = () => {
-        
-        const produtorRuralByEstado = groupByProperty(produtorRuralList, "estado")
+    const createAggregate = () => {
+        const produtorRuralByEstado = groupByProperty(produtorRuralList || [], "estado")
         const totalFazendaPorEstadoAggregate = aggregateCountField(produtorRuralByEstado, "area_total_hectares")
-
-        return {
-            labels: Object.keys(totalFazendaPorEstadoAggregate),
-            datasets: [
-                {
-                    data: Object.values(totalFazendaPorEstadoAggregate),
-                    borderWidth: 1,
-                }
-            ]
-        }
+        return totalFazendaPorEstadoAggregate
     }
-
-    return <Card className="text-center" style={{width:"450px"}}>
-      <Card.Header>Área total por ha</Card.Header>
-      <Card.Body>
-        {produtorRuralList && <Pie data={createGraphData()} />}
-      </Card.Body>
-    </Card>
+    return <ChartCard 
+        title="Área total por ha" 
+        aggregate={createAggregate()} />
 }
+
 const UsoDoSoloChart = ({produtorRuralList}:any) => {
-
-    
-    const createGraphData = () => {
-        const hectaresAggregate = aggregateUsoDoSolo(produtorRuralList)
-
+    const createAggregate = () => {
+        const hectaresAggregate = aggregateUsoDoSolo(produtorRuralList | [])
         const usoDoSoloAggregate = {
             "vegetação" : hectaresAggregate["area_vegetacao_hectares"],
             "agricultavel" : hectaresAggregate["area_agricultavel_hectares"],
             "não classificado" : hectaresAggregate["area_total_hectares"] - (hectaresAggregate["area_vegetacao_hectares"] + hectaresAggregate["area_agricultavel_hectares"])
         }
-
-        return {
-            labels: Object.keys(usoDoSoloAggregate),
-            datasets: [
-                {
-                    data: Object.values(usoDoSoloAggregate),
-                    borderWidth: 1,
-                }
-            ]
-        }
+        return usoDoSoloAggregate
     }
-
-    return <Card className="text-center" style={{width:"450px"}}>
-      <Card.Header>Área total por ha</Card.Header>
-      <Card.Body>
-        {produtorRuralList && <Pie data={createGraphData()} />}
-      </Card.Body>
-    </Card>
+    return <ChartCard 
+        title="Área total por ha" 
+        aggregate={createAggregate()} />
 }
-
-
-
 
 export default function CadastroProdutorRural() {
 
