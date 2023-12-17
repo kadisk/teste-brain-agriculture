@@ -1,11 +1,8 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import { Pie } from 'react-chartjs-2'
-import 'chart.js/auto'
 
 import {
 	Badge,
-    Card,
     Row
 } from 'react-bootstrap'
 
@@ -13,148 +10,10 @@ import getTotalFazendas from "../api/getTotalFazendas"
 import getTotalHectares from "../api/getTotalHectares"
 import getAllProdutorRural from "../api/getAllProdutorRural"
 
-const groupByProperty = (produtorRuralList:any, property:string) => {
-    return produtorRuralList.reduce((acc:any, produtorRural:any) => {
-        return {
-            ...acc,
-            [produtorRural[property]]:[
-                ...(acc[produtorRural[property]]||[]), produtorRural
-            ]
-        }
-    }, {})
-}
-
-const aggregateByTotalItem = (group:any) => {
-    return Object
-        .keys(group)
-        .reduce((acc:any, property:string) => {
-            return {
-                ...acc,
-                [property]: group[property].length
-            }
-        }, {})
-}
-
-const aggregateUsoDoSolo = (produtorRuralList:any) => {
-    return produtorRuralList
-     .reduce((acc:any, produtorRural:any) => {
-
-        acc["area_total_hectares"] += produtorRural["area_total_hectares"]
-        acc["area_agricultavel_hectares"] += produtorRural["area_agricultavel_hectares"]
-        acc["area_vegetacao_hectares"] += produtorRural["area_vegetacao_hectares"]
-
-        return acc
-     }, {
-        "area_total_hectares": 0,
-        "area_agricultavel_hectares": 0,
-        "area_vegetacao_hectares": 0
-     })
-}
-
-const aggregateTotalCulturas = (produtorRuralList:any) => {
-
-    const _AddCulturas = (acc:any, culturas:any[]) => {
-        return culturas.reduce((newAcc, {nome}) => {
-            if(newAcc[nome]){
-                newAcc[nome] += 1
-            } else {
-                newAcc[nome] = 1
-            }
-
-            return newAcc
-        }, acc) 
-    }
-
-    return produtorRuralList
-        .reduce((acc:any, {culturas}:any) => {
-            return _AddCulturas(acc, culturas)
-    }, {})
-
-}
-
-const countArrayByProperty = (arrObj:any, property:string) => {
-    return arrObj.reduce((acc:number, obj:string) => {
-        return acc + parseInt(obj[property])
-    }, 0)
-}
-
-const aggregateCountField = (group:any, fieldName:string) => {
-    return Object
-    .keys(group)
-    .reduce((acc:any, property:string) => {
-        return {
-            ...acc,
-            [property]: countArrayByProperty(group[property], fieldName)
-        }
-    }, {})
-}
-
-
-const ChartCard = ({title, aggregate}:any) => {
-
-    const createData = () => {
-        return {
-            labels: Object.keys(aggregate),
-            datasets: [
-                {
-                    data: Object.values(aggregate),
-                    borderWidth: 1,
-                }
-            ]
-        }
-    }
-
-    return <Card className="text-center" style={{width:"450px"}}>
-            <Card.Header>{title}</Card.Header>
-            <Card.Body>
-                <Pie data={createData()} />
-            </Card.Body>
-        </Card>
-}
-
-const FazendaPorEstadoChart = ({produtorRuralList}:any) => {
-    const createAggregate = () => {
-        const produtorRuralByEstado = groupByProperty(produtorRuralList || [], "estado")
-        const totalFazendaPorEstadoAggregate = aggregateByTotalItem(produtorRuralByEstado)
-        return totalFazendaPorEstadoAggregate
-    }
-    return <ChartCard 
-        title="Quantidade de Fazendas" 
-        aggregate={createAggregate()} />
-}
-
-const FazendaPorCulturaChart = ({produtorRuralList}:any) => {
-    const createAggregate = () => aggregateTotalCulturas(produtorRuralList || [])
-    return <ChartCard 
-        title="Quantidade Total" 
-        aggregate={createAggregate()} />
-}
-
-const HectaresPorEstadoChart = ({produtorRuralList}:any) => {
-    const createAggregate = () => {
-        const produtorRuralByEstado = groupByProperty(produtorRuralList || [], "estado")
-        const totalFazendaPorEstadoAggregate = aggregateCountField(produtorRuralByEstado, "area_total_hectares")
-        return totalFazendaPorEstadoAggregate
-    }
-    return <ChartCard 
-        title="Área total por ha" 
-        aggregate={createAggregate()} />
-}
-
-const UsoDoSoloChart = ({produtorRuralList}:any) => {
-    const createAggregate = () => {
-        const hectaresAggregate = aggregateUsoDoSolo(produtorRuralList | [])
-        const usoDoSoloAggregate = {
-            "vegetação" : hectaresAggregate["area_vegetacao_hectares"],
-            "agricultavel" : hectaresAggregate["area_agricultavel_hectares"],
-            "não classificado" : hectaresAggregate["area_total_hectares"] - (hectaresAggregate["area_vegetacao_hectares"] + hectaresAggregate["area_agricultavel_hectares"])
-        }
-        return usoDoSoloAggregate
-    }
-    return <ChartCard 
-        title="Área total por ha" 
-        aggregate={createAggregate()} />
-}
+import UsoDoSoloChart from "../componentes/charts/UsoDoSoloChart"
+import FazendaPorCulturaChart from "../componentes/charts/FazendaPorCulturaChart"
+import FazendaPorEstadoChart from "../componentes/charts/FazendaPorEstadoChart"
+import HectaresPorEstadoChart from "../componentes/charts/HectaresPorEstadoChart"
 
 export default function CadastroProdutorRural() {
 
