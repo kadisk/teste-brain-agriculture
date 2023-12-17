@@ -132,7 +132,9 @@ function FormProdutorRuralModal({id, onClose, onUpdate, onRegister}:Props) {
                     <ModalTitle>{getFormModalTitle()}</ModalTitle>
                     </ModalHeader>
                     <ModalBody style={{backgroundColor:"#eee"}}>
-                        {culturas && <ProdutorRuralForm 
+                        {
+                        culturas 
+                        && <ProdutorRuralForm 
                             culturas={culturas}
                             valueForUpdate={valueForUpdate}
                             data={valueLoader} 

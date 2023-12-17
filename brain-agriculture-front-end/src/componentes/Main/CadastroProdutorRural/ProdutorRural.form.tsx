@@ -1,34 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { useForm } from 'react-hook-form'
+import InputMask from 'react-input-mask'
 
-
-const RemoveProperty = (ob:any, property:any) => Object.keys(ob).reduce((acc:any, _property:any) => {
-    if(_property !== property){
-        return {
-            ...acc,
-            [_property]: ob[_property]
-        }
-    }
-    return acc
-
-}, {})
-
-const CPFMask = (cpf:any) => cpf
-    .replace(/\D/g, '')
-    .replace(/(\d{3})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d{1,2})/, '$1-$2')
-    .replace(/(-\d{2})\d+?$/, '$1')
-
-const CNPJMask = (cnpj:any) => cnpj
-    .replace(/\D/g, '')
-    .replace(/(\d{2})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d)/, '$1/$2')
-    .replace(/(\d{4})(\d)/, '$1-$2')
-    .replace(/(-\d{2})\d+?$/, '$1')
-
-const RemoveMask = (valor:string) => valor.replace(/\D/g, '')
 interface ProdutorRuralType {
     id: number
     tipo_documento: string
@@ -42,6 +15,7 @@ interface ProdutorRuralType {
     area_total_hectares: number
     created_at: string
     updated_at: string
+    culturaIds: number[]
 }
 interface Props{
     data:ProdutorRuralType|undefined
@@ -61,7 +35,7 @@ function ProdutorRuralForm({
 
     const [ isOriginalValueChanged, setIsOriginalValueChanged ] = useState(false)
     const [ documentType, setDocumentType ] = useState("cpf")
-
+    
     const { register, getValues, setValue, reset } = useForm({
         defaultValues: data || {}
     })
@@ -69,7 +43,6 @@ function ProdutorRuralForm({
     useEffect(() => {
         refreshForm()
     }, [data, setValue])
-
 
     useEffect(() => {
         if(isOriginalValueChanged && !valueForUpdate){
@@ -99,12 +72,15 @@ function ProdutorRuralForm({
                 ...values,
                 culturaIds: {}
             }
-
+            
             culturas.forEach(cultura => {
-                updatedValues.culturaIds[cultura.id] = values.culturas.some(c => c.id === cultura.id)
+                if(valueForUpdate?.culturaIds){
+                    updatedValues.culturaIds[cultura.id] = valueForUpdate.culturaIds.some( id => id == cultura.id)
+                } else if(values.culturas){
+                    updatedValues.culturaIds[cultura.id] = values.culturas.some(c => c.id == cultura.id) 
+                }
             })
             reset(updatedValues)
-
         }
     }
 
@@ -117,13 +93,9 @@ function ProdutorRuralForm({
                 culturaIds: Object.entries(currentValues.culturaIds)
                             .filter(([key, value]) => value)
                             .map(([key]) => key),
-                tipo_documento: documentType,
-                numero_documento: currentValues.numero_documento
-                    ? RemoveMask(currentValues.numero_documento) 
-                    : undefined
+                tipo_documento: documentType
             }
-            const nnewCurrentValues = RemoveProperty(newCurrentValues, "culturas")
-            onChangeValue(nnewCurrentValues)
+            onChangeValue(newCurrentValues)
         } else {
             onResetValue()
         }
@@ -133,7 +105,6 @@ function ProdutorRuralForm({
 
     const handleChangeDocumentType = (newDocumentType:string) => {
         setDocumentType(newDocumentType)
-        //changeForm()
     }
 
     return (<form className="row g-3" onChange={() => handleChangeForm()}>
@@ -168,10 +139,11 @@ function ProdutorRuralForm({
                 </div>
                 <div className="col-auto">
                     <label className="form-label">Número do {documentType.toUpperCase()}</label>
-                    <input 
-                        type="text" 
-                        className="form-control" 
-                        {...register("numero_documento")}
+                    <InputMask
+                        mask={documentType === 'cpf' ? '999.999.999-99' : '99.999.999/9999-99'}
+                        value={getValues("numero_documento")}
+                        onChange={(e) => setValue("numero_documento", e.target.value)}
+                        className="form-control"
                     />
                 </div>
                 <div className="col-8">
