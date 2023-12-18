@@ -8,6 +8,7 @@ export default async function updateProdutorRural(values:any) {
     })
 
     if (!response.ok) {
-        throw new Error(`Erro na atualização: ${response.status}`)
+        const {message} = await response.json()
+        throw new Error(message)
     }
 }

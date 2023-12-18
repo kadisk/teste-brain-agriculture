@@ -76,8 +76,8 @@ function FormProdutorRuralModal({id, onClose, onUpdate, onRegister}:Props) {
                 await updateProdutorRural(valueForUpdate)
                 onUpdate()
             }
-        } catch (error) {
-            toast.error(`Não foi possível alteração do cadastro verifique os campos novamente`)
+        } catch (error:any) {
+            toast.error(error.message)
         }
     }
 
