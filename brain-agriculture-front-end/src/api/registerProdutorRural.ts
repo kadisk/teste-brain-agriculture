@@ -8,6 +8,7 @@ export default async function registerProdutorRural(values:any) {
     })
 
     if (!response.ok) {
-        throw new Error(`Erro no cadastro: ${response.status}`)
+        const {message} = await response.json()
+        throw new Error(message)
     }
 }

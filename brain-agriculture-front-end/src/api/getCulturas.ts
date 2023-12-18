@@ -5,7 +5,7 @@ export default async function getCulturas() {
             throw new Error(`Erro ao buscar dados: ${res.status}`)
         }
         
-        return  await res.json()
+        return await res.json()
     } catch (error) {
         console.error(error)
         return []

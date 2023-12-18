@@ -90,7 +90,7 @@ function FormProdutorRuralModal({id, onClose, onUpdate, onRegister}:Props) {
                 toast.error(`Cadastro inválido`)
             }
         } catch (error:any) {
-            toast.error(`Não foi possível o cadastro  e Produtor Rural verifique os campos novamente`)
+            toast.error(error.message)
         }
     }
 
